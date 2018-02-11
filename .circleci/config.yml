@@ -16,7 +16,7 @@ jobs:
           paths:
             - ~/repo
           key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
-  push_beta:
+  push_preview:
     docker:
       - image: microsoft/dotnet:2.0.5-sdk-2.1.4-stretch
     working_directory: ~/repo
@@ -25,11 +25,11 @@ jobs:
           key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
       - run:
           command: |
-            s=$(echo $CIRCLE_TAG | sed 's/v[0-9]+(\.[0-9]+)*//') -r
+            s=$(echo $CIRCLE_TAG | sed 's/v[0-9]+(\.[0-9]+)*//' -r)
             cd ~/repo/src/Aiplugs.Functions
             dotnet pack -c Release --version-suffix $s
             dotnet nuget push ./bin/Release/*.nupkg -s https://api.nuget.org/v3/index.json -k $NUGET_TOKEN
-  push_core_beta:
+  push_core_preview:
     docker:
       - image: microsoft/dotnet:2.0.5-sdk-2.1.4-stretch
     working_directory: ~/repo
@@ -38,7 +38,7 @@ jobs:
           key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
       - run:
           command: |
-            s=$(echo $CIRCLE_TAG | sed 's/core-v[0-9]+(\.[0-9]+)*//') -r
+            s=$(echo $CIRCLE_TAG | sed 's/core-v[0-9]+(\.[0-9]+)*//' -r)
             cd ~/repo/src/Aiplugs.Functions.Core
             dotnet pack -c Release --version-suffix -$s
             dotnet nuget push ./bin/Release/*.nupkg -s https://api.nuget.org/v3/index.json -k $NUGET_TOKEN
@@ -79,20 +79,20 @@ workflows:
               only: /.*/
             branches:
               ignore: /.*/
-      - push_beta:
+      - push_preview:
           requires:
             - build
           filters:
             tags: 
-              only: /^v[0-9]+(\.[0-9]+)*-beta\d+$/
+              only: /^v[0-9]+(\.[0-9]+)*-.+$/
             branches:
               ignore: /.*/
-      - push_core_beta:
+      - push_core_preview:
           requires:
             - build
           filters:
             tags: 
-              only: /^core-v[0-9]+(\.[0-9]+)*-beta\d+$/
+              only: /^core-v[0-9]+(\.[0-9]+)*-.+$/
             branches:
               ignore: /.*/
       - push:
