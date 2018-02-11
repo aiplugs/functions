@@ -28,7 +28,7 @@ jobs:
             s=$(echo $CIRCLE_TAG | sed 's/v.*-//')
             cd ~/repo/src/Aiplugs.Functions
             dotnet pack -c Release --version-suffix $s
-            dotnet nuget push .\bin\Release\*.nupkg -s https://api.nuget.org/v3/index.json -k $NUGET_TOKEN
+            dotnet nuget push ./bin/Release/*.nupkg -s https://api.nuget.org/v3/index.json -k $NUGET_TOKEN
   push_core_beta:
     docker:
       - image: microsoft/dotnet:2.0.5-sdk-2.1.4-stretch
@@ -41,7 +41,7 @@ jobs:
             s=$(echo $CIRCLE_TAG | sed 's/core-v.*-//')
             cd ~/repo/src/Aiplugs.Functions.Core
             dotnet pack -c Release --version-suffix $s
-            dotnet nuget push .\bin\Release\*.nupkg -s https://api.nuget.org/v3/index.json -k $NUGET_TOKEN
+            dotnet nuget push ./bin/Release/*.nupkg -s https://api.nuget.org/v3/index.json -k $NUGET_TOKEN
   push:
     docker:
       - image: microsoft/dotnet:2.0.5-sdk-2.1.4-stretch
@@ -53,7 +53,7 @@ jobs:
           command: |
             cd ~/repo/src/Aiplugs.Functions
             dotnet pack -c Release
-            dotnet nuget push .\bin\Release\*.nupkg -s https://api.nuget.org/v3/index.json -k $NUGET_TOKEN
+            dotnet nuget push ./bin/Release/*.nupkg -s https://api.nuget.org/v3/index.json -k $NUGET_TOKEN
   push_core:
     docker:
       - image: microsoft/dotnet:2.0.5-sdk-2.1.4-stretch
@@ -65,7 +65,7 @@ jobs:
           command: |
             cd ~/repo/src/Aiplugs.Functions.Core
             dotnet pack -c Release
-            dotnet nuget push .\bin\Release\*.nupkg -s https://api.nuget.org/v3/index.json -k $NUGET_TOKEN
+            dotnet nuget push ./bin/Release/*.nupkg -s https://api.nuget.org/v3/index.json -k $NUGET_TOKEN
 workflows:
   version: 2
   default:
