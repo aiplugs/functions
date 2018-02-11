@@ -66,12 +66,9 @@ jobs:
             dotnet nuget push .\bin\Release\*.nupkg -s https://api.nuget.org/v3/index.json -k $NUGET_TOKEN
 workflows:
   version: 2
-  build_and_test:
-    jobs:
-      - build
   publish:
     jobs:
-      - build
+      - build:
           filters:
             tags: 
               only: /^v[0-9]+(\.[0-9]+)*-beta\d+$/
