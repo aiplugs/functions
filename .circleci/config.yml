@@ -7,9 +7,6 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Move to Solution Folder
-          command: cd ~/repo/src
-      - run:
           name: Build Solution
           command: cd ~/repo/src && dotnet build
       - run:
@@ -19,7 +16,7 @@ jobs:
           paths:
             - ~/repo
           key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
-  push-beta:
+  push_beta:
     docker:
       - image: microsoft/dotnet:2.0.5-sdk-2.1.4-stretch
     working_directory: ~/repo
@@ -32,7 +29,7 @@ jobs:
       - run:
           name: Push Aiplugs.Function
           command: cd ~/repo/src/Aiplugs.Functions && dotnet nuget publish -k $NUGET_TOKEN
-  push-core-beta:
+  push_core_beta:
     docker:
       - image: microsoft/dotnet:2.0.5-sdk-2.1.4-stretch
     working_directory: ~/repo
@@ -58,7 +55,7 @@ jobs:
       - run:
           name: Push Aiplugs.Function
           command: cd ~/repo/src/Aiplugs.Functions && dotnet nuget publish -k $NUGET_TOKEN
-  push-core:
+  push_core:
     docker:
       - image: microsoft/dotnet:2.0.5-sdk-2.1.4-stretch
     working_directory: ~/repo
@@ -73,10 +70,10 @@ jobs:
           command: cd ~/repo/src/Aiplugs.Functions.Core && dotnet nuget publish -k $NUGET_TOKEN
 workflows:
   version: 2
-  build-and-deploy:
+  build_publish_beta:
     jobs:
       - build
-      - push-beta:
+      - push_beta:
           requires:
             - build
           filters:
@@ -84,7 +81,10 @@ workflows:
               only: /^v[0-9]+(\.[0-9]+)*-beta[\d]+$/
             branches:
               ignore: /.*/
-      - push-core-beta:
+  build_publish_core_beta:
+    jobs:
+      - build
+      - push_core_beta:
           requires:
             - build
           filters:
@@ -92,6 +92,9 @@ workflows:
               only: /^core-v[0-9]+(\.[0-9]+)*-beta[\d]+$/
             branches:
               ignore: /.*/
+  build_publish:
+    jobs:
+      - build
       - push:
           requires:
             - build
@@ -100,7 +103,10 @@ workflows:
               only: /^v[0-9]+(\.[0-9]+)*$/
             branches:
               ignore: /.*/
-      - push-core:
+  build_publish_core:
+    jobs:
+      - build
+      - push_core:
           requires:
             - build
           filters:
