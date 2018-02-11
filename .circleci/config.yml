@@ -24,11 +24,10 @@ jobs:
       - restore_cache:
           key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
       - run:
-          name: Pack Aiplugs.Function
-          command: cd ~/repo/src/Aiplugs.Functions && dotnet pack --version-suffix {{ .Environment.CIRCLE_TAG }}
-      - run:
-          name: Push Aiplugs.Function
-          command: cd ~/repo/src/Aiplugs.Functions && dotnet nuget publish -k $NUGET_TOKEN
+          command: |
+            cd ~/repo/src/Aiplugs.Functions
+            dotnet pack -c Release --version-suffix {{ .Environment.CIRCLE_TAG }}
+            dotnet nuget push .\bin\Release\*.nupkg -s https://api.nuget.org/v3/index.json -k $NUGET_TOKEN
   push_core_beta:
     docker:
       - image: microsoft/dotnet:2.0.5-sdk-2.1.4-stretch
@@ -37,11 +36,10 @@ jobs:
       - restore_cache:
           key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
       - run:
-          name: Pack Aiplugs.Function.Core
-          command: cd ~/repo/src/Aiplugs.Functions.Core && dotnet pack --version-suffix {{ .Environment.CIRCLE_TAG }}
-      - run:
-          name: Push Aiplugs.Function.Core
-          command: cd ~/repo/src/Aiplugs.Functions.Core && dotnet nuget publish -k $NUGET_TOKEN
+          command: |
+            cd ~/repo/src/Aiplugs.Functions.Core
+            dotnet pack -c Release --version-suffix {{ .Environment.CIRCLE_TAG }}
+            dotnet nuget push .\bin\Release\*.nupkg -s https://api.nuget.org/v3/index.json -k $NUGET_TOKEN
   push:
     docker:
       - image: microsoft/dotnet:2.0.5-sdk-2.1.4-stretch
@@ -50,11 +48,10 @@ jobs:
       - restore_cache:
           key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
       - run:
-          name: Pack Aiplugs.Function
-          command: cd ~/repo/src/Aiplugs.Functions && dotnet pack
-      - run:
-          name: Push Aiplugs.Function
-          command: cd ~/repo/src/Aiplugs.Functions && dotnet nuget publish -k $NUGET_TOKEN
+          command: |
+            cd ~/repo/src/Aiplugs.Functions
+            dotnet pack -c Release
+            dotnet nuget push .\bin\Release\*.nupkg -s https://api.nuget.org/v3/index.json -k $NUGET_TOKEN
   push_core:
     docker:
       - image: microsoft/dotnet:2.0.5-sdk-2.1.4-stretch
@@ -63,11 +60,10 @@ jobs:
       - restore_cache:
           key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
       - run:
-          name: Pack Aiplugs.Function.Core
-          command: cd ~/repo/src/Aiplugs.Functions.Core && dotnet pack
-      - run:
-          name: Push Aiplugs.Function.Core
-          command: cd ~/repo/src/Aiplugs.Functions.Core && dotnet nuget publish -k $NUGET_TOKEN
+          command: |
+            cd ~/repo/src/Aiplugs.Functions.Core
+            dotnet pack -c Release
+            dotnet nuget push .\bin\Release\*.nupkg -s https://api.nuget.org/v3/index.json -k $NUGET_TOKEN
 workflows:
   version: 2
   build_publish_beta:
@@ -78,39 +74,14 @@ workflows:
             - build
           filters:
             tags: 
-              only: /^v[0-9]+(\.[0-9]+)*-beta[\d]+$/
+              only: /^v[0-9]+(\.[0-9]+)*-beta\d+$/
             branches:
               ignore: /.*/
-  build_publish_core_beta:
-    jobs:
-      - build
       - push_core_beta:
           requires:
             - build
           filters:
             tags: 
-              only: /^core-v[0-9]+(\.[0-9]+)*-beta[\d]+$/
-            branches:
-              ignore: /.*/
-  build_publish:
-    jobs:
-      - build
-      - push:
-          requires:
-            - build
-          filters:
-            tags: 
-              only: /^v[0-9]+(\.[0-9]+)*$/
-            branches:
-              ignore: /.*/
-  build_publish_core:
-    jobs:
-      - build
-      - push_core:
-          requires:
-            - build
-          filters:
-            tags: 
-              only: /^core-v[0-9]+(\.[0-9]+)*$/
+              only: /^core-v[0-9]+(\.[0-9]+)*-beta\d+$/
             branches:
               ignore: /.*/
