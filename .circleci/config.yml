@@ -25,7 +25,7 @@ jobs:
           key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
       - run:
           command: |
-            s=$(echo {{ .Environment.CIRCLE_TAG }} | sed 's/v.*-//')
+            s=$(echo $CIRCLE_TAG | sed 's/v.*-//')
             cd ~/repo/src/Aiplugs.Functions
             dotnet pack -c Release --version-suffix $s
             dotnet nuget push .\bin\Release\*.nupkg -s https://api.nuget.org/v3/index.json -k $NUGET_TOKEN
@@ -38,7 +38,7 @@ jobs:
           key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
       - run:
           command: |
-            s=$(echo {{ .Environment.CIRCLE_TAG }} | sed 's/core-v.*-//')
+            s=$(echo $CIRCLE_TAG | sed 's/core-v.*-//')
             cd ~/repo/src/Aiplugs.Functions.Core
             dotnet pack -c Release --version-suffix $s
             dotnet nuget push .\bin\Release\*.nupkg -s https://api.nuget.org/v3/index.json -k $NUGET_TOKEN
