@@ -2,31 +2,57 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
+using Aiplugs.Functions.Core;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Sample.Models;
 
 namespace Sample.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {
-        public IActionResult Index()
+        private readonly IJobService _jobService;
+        public HomeController(IJobService jobService)
         {
-            return View();
+            _jobService = jobService;
         }
 
-        public IActionResult About()
+        [HttpGet]        
+        public async Task<IActionResult> Index(long? id)
         {
-            ViewData["Message"] = "Your application description page.";
+            var model = new SampleViewModel { History = await _jobService.GetAsync(null) };
+            if (id.HasValue == false)
+                return View(model);
 
-            return View();
+            model.Current = await _jobService.FindAsync(id.Value);
+            return View(model);
         }
 
-        public IActionResult Contact()
+        [HttpPost]
+        public async Task<IActionResult> Run([FromForm]RunViewModel model)
         {
-            ViewData["Message"] = "Your contact page.";
+            if (ModelState.IsValid == false)
+                return RedirectToAction("Index");
 
-            return View();
+            var id = await _jobService.ExclusiveCreateAsync(model.Name);
+            if (id.HasValue == false)
+                return StatusCode((int)HttpStatusCode.Conflict);
+
+            return RedirectToAction("Index",new { id });
+        }
+
+        [HttpPost]
+        public IActionResult Cancel([FromForm]CancelViewModel model)
+        {
+            if (ModelState.IsValid == false)
+                return RedirectToAction("Index");
+
+            _jobService.Cancel(model.Id);
+
+            return RedirectToAction("Index",new { id = model.Id });
         }
 
         public IActionResult Error()
