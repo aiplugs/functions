@@ -1,10 +1,3 @@
-<style>
-    @import url('https://fonts.googleapis.com/css?family=Comfortaa');
-    .logo {
-        font-family: Comfortaa;
-    }
-</style>
-
-<h1 class="logo">aiplugs functions</h1>
+![aiplugs functions](https://aiplugs.github.io/functions/img/logo.png)
 
 A background job library for ASP.NET Core.
