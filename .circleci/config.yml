@@ -66,6 +66,9 @@ jobs:
             dotnet nuget push .\bin\Release\*.nupkg -s https://api.nuget.org/v3/index.json -k $NUGET_TOKEN
 workflows:
   version: 2
+  default:
+    jobs:
+      - build
   publish:
     jobs:
       - build:
