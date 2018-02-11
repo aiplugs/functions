@@ -1,0 +1,122 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: microsoft/dotnet:2.0.5-sdk-2.1.4-stretch
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - run:
+          name: Move to Solution Folder
+          command: cd ~/repo/src
+      - run:
+          name: Build Solution
+          command: dotnet build
+      - run:
+          name: Test
+          command: dotnet test
+      - save_cache:
+          paths:
+            - ~/repo
+          key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
+  push-beta:
+    docker:
+      - image: microsoft/dotnet:2.0.5-sdk-2.1.4-stretch
+    working_directory: ~/repo
+    steps:
+      - restore_cache:
+          key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
+      - run:
+          name: Move to Project Folder
+          command: cd ~/repo/src/Aiplugs.Functions
+      - run:
+          name: Pack Aiplugs.Function
+          command: dotnet pack --version-suffix {{ .Environment.CIRCLE_TAG }}
+      - run:
+          name: Push Aiplugs.Function
+          command: dotnet nuget publish -k $NUGET_TOKEN
+  push-core-beta:
+    docker:
+      - image: microsoft/dotnet:2.0.5-sdk-2.1.4-stretch
+    working_directory: ~/repo
+    steps:
+      - restore_cache:
+          key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
+      - run:
+          name: Move to Project Folder
+          command: cd ~/repo/src/Aiplugs.Functions.Core
+      - run:
+          name: Pack Aiplugs.Function.Core
+          command: dotnet pack --version-suffix {{ .Environment.CIRCLE_TAG }}
+      - run:
+          name: Push Aiplugs.Function.Core
+          command: dotnet nuget publish -k $NUGET_TOKEN
+  push:
+    docker:
+      - image: microsoft/dotnet:2.0.5-sdk-2.1.4-stretch
+    working_directory: ~/repo
+    steps:
+      - restore_cache:
+          key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
+      - run:
+          name: Move to Project Folder
+          command: cd ~/repo/src/Aiplugs.Functions
+      - run:
+          name: Pack Aiplugs.Function
+          command: dotnet pack
+      - run:
+          name: Push Aiplugs.Function
+          command: dotnet nuget publish -k $NUGET_TOKEN
+  push-core:
+    docker:
+      - image: microsoft/dotnet:2.0.5-sdk-2.1.4-stretch
+    working_directory: ~/repo
+    steps:
+      - restore_cache:
+          key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
+      - run:
+          name: Move to Project Folder
+          command: cd ~/repo/src/Aiplugs.Functions.Core
+      - run:
+          name: Pack Aiplugs.Function.Core
+          command: dotnet pack
+      - run:
+          name: Push Aiplugs.Function.Core
+          command: dotnet nuget publish -k $NUGET_TOKEN
+workflows:
+  version: 2
+  build-and-deploy:
+    jobs:
+      - build
+      - push-beta:
+          requires:
+            - build
+          filters:
+            tags: 
+              only: /^v[0-9]+(\.[0-9]+)*-beta[\d]+$/
+            branches:
+              ignore: /.*/
+      - push-core-beta:
+          requires:
+            - build
+          filters:
+            tags: 
+              only: /^core-v[0-9]+(\.[0-9]+)*-beta[\d]+$/
+            branches:
+              ignore: /.*/
+      - push:
+          requires:
+            - build
+          filters:
+            tags: 
+              only: /^v[0-9]+(\.[0-9]+)*$/
+            branches:
+              ignore: /.*/
+      - push-core:
+          requires:
+            - build
+          filters:
+            tags: 
+              only: /^core-v[0-9]+(\.[0-9]+)*$/
+            branches:
+              ignore: /.*/
