@@ -11,10 +11,10 @@ jobs:
           command: cd ~/repo/src
       - run:
           name: Build Solution
-          command: dotnet build
+          command: cd ~/repo/src && dotnet build
       - run:
           name: Test
-          command: dotnet test
+          command: cd ~/repo/src && dotnet test
       - save_cache:
           paths:
             - ~/repo
