@@ -40,7 +40,7 @@ jobs:
           command: |
             s=$(echo $CIRCLE_TAG | sed 's/core-v[0-9]+(\.[0-9]+)*//' -r)
             cd ~/repo/src/Aiplugs.Functions.Core
-            dotnet pack -c Release --version-suffix -$s
+            dotnet pack -c Release --version-suffix $s
             dotnet nuget push ./bin/Release/*.nupkg -s https://api.nuget.org/v3/index.json -k $NUGET_TOKEN
   push:
     docker:
