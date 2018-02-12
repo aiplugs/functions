@@ -7,7 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../Aiplugs.Functions/Aiplugs.Functions.csproj" />
     <ProjectReference Include="../Aiplugs.Functions.Core/Aiplugs.Functions.Core.csproj" />
   </ItemGroup>
 
