@@ -54,7 +54,8 @@ namespace Aiplugs.Functions.Core
                     }
                     catch(OperationCanceledException)
                     {
-                        _logger.LogInformation("JobRunner is notified cancel event.");                        
+                        _logger.LogInformation("JobRunner is notified cancel event.");
+                        break;            
                     }
                     catch(Exception ex)
                     {
