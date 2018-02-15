@@ -29,7 +29,7 @@ namespace Aiplugs.Functions.Core.Data
 
         public virtual async Task UpdateAsync(IJob job)
         {
-            await _db.TransactionalAsync(async () => {
+            await _db.TransactionalAsync(async tran => {
                 return await _db.ExecuteAsync(
                         @"UPDATE Jobs
                             SET Name = @Name,
@@ -38,7 +38,7 @@ namespace Aiplugs.Functions.Core.Data
                                 StartAt = @StartAt,
                                 FinishAt = @FinishAt,
                                 Log = @Log
-                          WHERE Id = @Id", job);
+                          WHERE Id = @Id", job, transaction:tran);
             });
         }
     }

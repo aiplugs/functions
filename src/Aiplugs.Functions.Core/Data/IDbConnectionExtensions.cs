@@ -8,13 +8,13 @@ namespace Aiplugs.Functions.Core
 {
     public static class IDbConnectionExtensions
     {
-        public static async Task TransactionalAsync(this IDbConnection db, Func<Task> action, IsolationLevel level = IsolationLevel.ReadCommitted, int tryMax = 3)
+        public static async Task TransactionalAsync(this IDbConnection db, Func<IDbTransaction, Task> action, IsolationLevel level = IsolationLevel.ReadCommitted, int tryMax = 3)
         {
             await Policy.Handle<Exception>().RetryAsync(tryMax).ExecuteAsync(async () => {
-                using(var tran = db.BeginTransaction(IsolationLevel.Serializable))
+                using(var tran = db.BeginTransaction(level))
                 {
                     try {
-                        await action();
+                        await action(tran);
                         tran.Commit();                   
                     }
                     catch(Exception ex)
@@ -25,13 +25,13 @@ namespace Aiplugs.Functions.Core
                 }
             });
         }
-        public static void Transactional(this IDbConnection db, Action action, IsolationLevel level = IsolationLevel.ReadCommitted, int tryMax = 3)
+        public static void Transactional(this IDbConnection db, Action<IDbTransaction> action, IsolationLevel level = IsolationLevel.ReadCommitted, int tryMax = 3)
         {
             Policy.Handle<Exception>().Retry(tryMax).Execute(() => {
-                using(var tran = db.BeginTransaction(IsolationLevel.Serializable))
+                using(var tran = db.BeginTransaction(level))
                 {
                     try {
-                        action();
+                        action(tran);
                         tran.Commit();
                     }
                     catch(Exception ex)
@@ -42,14 +42,14 @@ namespace Aiplugs.Functions.Core
                 }
             });
         }
-        public static async Task<T> TransactionalAsync<T>(this IDbConnection db, Func<Task<T>> action, IsolationLevel level = IsolationLevel.ReadCommitted, int tryMax = 3)
+        public static async Task<T> TransactionalAsync<T>(this IDbConnection db, Func<IDbTransaction, Task<T>> action, IsolationLevel level = IsolationLevel.ReadCommitted, int tryMax = 3)
         {
             T result = default(T);
             await Policy.Handle<Exception>().RetryAsync(tryMax).ExecuteAsync(async () => {
-                using(var tran = db.BeginTransaction(IsolationLevel.Serializable))
+                using(var tran = db.BeginTransaction(level))
                 {
                     try {
-                        result = await action();
+                        result = await action(tran);
                         tran.Commit();                   
                     }
                     catch(Exception ex)
@@ -61,14 +61,14 @@ namespace Aiplugs.Functions.Core
             });
             return result;
         }
-        public static T Transactional<T>(this IDbConnection db, Func<T> action, IsolationLevel level = IsolationLevel.ReadCommitted, int tryMax = 3)
+        public static T Transactional<T>(this IDbConnection db, Func<IDbTransaction, T> action, IsolationLevel level = IsolationLevel.ReadCommitted, int tryMax = 3)
         {
             T result = default(T);
             Policy.Handle<Exception>().Retry(tryMax).Execute(() => {
-                using(var tran = db.BeginTransaction(IsolationLevel.Serializable))
+                using(var tran = db.BeginTransaction(level))
                 {
                     try {
-                        result = action();
+                        result = action(tran);
                         tran.Commit();
                         return;                
                     }

@@ -14,12 +14,12 @@ namespace Aiplugs.Functions.Core.Data.SqlServer
         }
         public override async Task<long> AddAsync(IJob job)
         {
-            return await _db.TransactionalAsync(async () => {
+            return await _db.TransactionalAsync(async tran => {
                 return await _db.ExecuteScalarAsync<long>(
                         @"INSERT INTO 
                             Jobs (Name, Status, Progress, StartAt, FinishAt, Log, CreatedAt, CreatedBy) 
                             OUTPUT INSERTED.Id
-                            VALUES (@Name, @Status, @Progress, @StartAt, @FinishAt, @Log, @CreatedAt, @CreatedBy)",job);
+                            VALUES (@Name, @Status, @Progress, @StartAt, @FinishAt, @Log, @CreatedAt, @CreatedBy)",job, transaction:tran);
             });
         }
 

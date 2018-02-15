@@ -23,7 +23,7 @@ namespace Aiplugs.Functions.Core.Data.Sqlite
             {
                 _db = dbConnection;
             }
-            public void Migrate()
+            public void Migrate(IDbTransaction tran)
             {
                 _db.Execute(@"CREATE TABLE IF NOT EXISTS 
                             Jobs (
@@ -36,10 +36,10 @@ namespace Aiplugs.Functions.Core.Data.Sqlite
                                 Log       TEXT NULL,
                                 CreatedAt DATETIME NOT NULL,
                                 CreatedBy VARCHAR(64) NOT NULL
-                            )");
+                            )", tran);
             }
 
-            public bool NeedMigrate()
+            public bool NeedMigrate(IDbTransaction tran)
             {
                 return true;
             }

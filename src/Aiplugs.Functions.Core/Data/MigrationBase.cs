@@ -15,23 +15,23 @@ namespace Aiplugs.Functions.Core
             _db = dbConnection;
             _force = force;
         }
-        public void Migrate()
+        public void Migrate(IDbTransaction _ = null)
         {
-            _db.Transactional(() => {
+            _db.Transactional(tran => {
                 for(var i = 0; i < Migrations.Length; i++)
                 {
-                    if (Migrations[i].NeedMigrate() || _force) 
+                    if (Migrations[i].NeedMigrate(tran) || _force) 
                     {
-                        Migrations[i].Migrate();
+                        Migrations[i].Migrate(tran);
                     }
                 }
             }, IsolationLevel.Serializable);
         }
 
-        public bool NeedMigrate()
+        public bool NeedMigrate(IDbTransaction _ = null)
         {
-            return _db.Transactional(() => {
-                return Migrations.Any(m => m.NeedMigrate());
+            return _db.Transactional(tran => {
+                return Migrations.Any(m => m.NeedMigrate(tran));
             }, IsolationLevel.Serializable);
         }
     }

@@ -16,12 +16,12 @@ namespace Aiplugs.Functions.Core.Data.Sqlite
         
         public override async Task<long> AddAsync(IJob job)
         {
-            return await _db.TransactionalAsync(async () => {
+            return await _db.TransactionalAsync(async tran => {
                 return await _db.ExecuteScalarAsync<long>(
                         @"INSERT INTO 
                             Jobs (Name, Status, Progress, StartAt, FinishAt, Log, CreatedAt, CreatedBy) 
                             VALUES (@Name, @Status, @Progress, @StartAt, @FinishAt, @Log, @CreatedAt, @CreatedBy); 
-                          SELECT last_insert_rowid();",job);
+                          SELECT last_insert_rowid();",job, transaction:tran);
             });
         }
 

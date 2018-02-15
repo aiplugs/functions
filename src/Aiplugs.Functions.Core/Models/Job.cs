@@ -24,6 +24,7 @@ namespace Aiplugs.Functions.Core
             Status = JobStatus.Ready;
             StartAt = null;
             FinishAt = null;
+            CreatedBy = Guid.Empty.ToString();
         }
         public Job(string name, string createBy) 
             : this()

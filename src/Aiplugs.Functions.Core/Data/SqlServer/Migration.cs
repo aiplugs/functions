@@ -23,25 +23,25 @@ namespace Aiplugs.Functions.Core.Data.SqlServer
             {
                 _db = dbConnection;
             }
-            public void Migrate()
+            public void Migrate(IDbTransaction tran)
             {
                 _db.Execute(@"CREATE TABLE
                             Jobs (
-                                Id     BIGINT PRIMARY KEY,
+                                Id     BIGINT IDENTITY,
                                 Name   NVARCHAR(255) NOT NULL,
                                 Progress  INT NOT NULL,
                                 Status    INT NOT NULL,
-                                StartAt   DATETIME NULL,
-                                FinishAt  DATETIME NULL,
+                                StartAt   DATETIME2 NULL,
+                                FinishAt  DATETIME2 NULL,
                                 Log       NVARCHAR(MAX) NULL,
-                                CreatedAt DATETIME NOT NULL,
+                                CreatedAt DATETIME2 NOT NULL,
                                 CreatedBy NVARCHAR(64) NOT NULL
-                            )");
+                            )", transaction:tran);
             }
 
-            public bool NeedMigrate()
+            public bool NeedMigrate(IDbTransaction tran)
             {
-                return _db.ExecuteScalar<int>(@"SELECT COUNT(name) FROM sys.tables WHERE name == 'Jobs'") == 0;
+                return _db.ExecuteScalar<int>(@"SELECT COUNT(name) FROM sys.tables WHERE name = 'Jobs'", transaction:tran) == 0;
             }
         }
         #endregion
