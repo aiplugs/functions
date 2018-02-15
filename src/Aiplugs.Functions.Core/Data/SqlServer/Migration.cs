@@ -3,7 +3,7 @@ using System.Data;
 using System.Linq;
 using Dapper;
 
-namespace Aiplugs.Functions.Core.Data.Sqlite
+namespace Aiplugs.Functions.Core.Data.SqlServer
 {
     public class Migration : MigrationBase
     {
@@ -25,23 +25,23 @@ namespace Aiplugs.Functions.Core.Data.Sqlite
             }
             public void Migrate()
             {
-                _db.Execute(@"CREATE TABLE IF NOT EXISTS 
+                _db.Execute(@"CREATE TABLE
                             Jobs (
-                                Id     INTEGER PRIMARY KEY,
-                                Name   VARCHAR(255) NOT NULL,
-                                Progress  INTEGER NOT NULL,
-                                Status    INTEGER NOT NULL,
+                                Id     BIGINT PRIMARY KEY,
+                                Name   NVARCHAR(255) NOT NULL,
+                                Progress  INT NOT NULL,
+                                Status    INT NOT NULL,
                                 StartAt   DATETIME NULL,
                                 FinishAt  DATETIME NULL,
-                                Log       TEXT NULL,
+                                Log       NVARCHAR(MAX) NULL,
                                 CreatedAt DATETIME NOT NULL,
-                                CreatedBy VARCHAR(64) NOT NULL
+                                CreatedBy NVARCHAR(64) NOT NULL
                             )");
             }
 
             public bool NeedMigrate()
             {
-                return true;
+                return _db.ExecuteScalar<int>(@"SELECT COUNT(name) FROM sys.tables WHERE name == 'Jobs'") == 0;
             }
         }
         #endregion

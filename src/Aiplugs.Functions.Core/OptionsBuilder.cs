@@ -20,8 +20,8 @@ namespace Aiplugs.Functions.Core
         }
         public OptionsBuilder UseSqlServer()
         {
-            MigrationFactory = db => new Data.Sqlite.Migration(db, _forceMigration);
-            JobRepositoryFactory = db => new Data.Sqlite.JobRepository(db);            
+            MigrationFactory = db => new Data.SqlServer.Migration(db, _forceMigration);
+            JobRepositoryFactory = db => new Data.SqlServer.JobRepository(db);            
             return this;
         }
         public OptionsBuilder ForceMigration()
