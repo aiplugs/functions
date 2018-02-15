@@ -41,9 +41,7 @@ namespace Aiplugs.Functions.Core
             CancellationTokenSource = new CancellationTokenSource();
             return Task.Factory.StartNew(() => {
                 while (true)
-                {
-                    _logger.LogInformation("polling...");
-                    
+                {   
                     try
                     {
                         var dequeue = _jobService.DequeueAsync();
@@ -53,6 +51,10 @@ namespace Aiplugs.Functions.Core
                         {
                             Run(job);
                         }
+                    }
+                    catch(OperationCanceledException)
+                    {
+                        _logger.LogInformation("JobRunner is notified cancel event.");                        
                     }
                     catch(Exception ex)
                     {
