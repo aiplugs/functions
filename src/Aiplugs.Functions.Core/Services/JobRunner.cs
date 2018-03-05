@@ -54,6 +54,11 @@ namespace Aiplugs.Functions.Core
                             Run(job);
                         }
                     }
+                    catch(OperationCanceledException)
+                    {
+                        _logger.LogInformation("JobRunner is canceled");
+                        break;
+                    }
                     catch(Exception ex)
                     {
                         _logger.LogError(ex, "An error has occured in job");
