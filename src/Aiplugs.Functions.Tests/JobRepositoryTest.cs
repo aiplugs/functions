@@ -8,11 +8,6 @@ namespace Aiplugs.Functions.Tests
 {
     public class JobRepositoryTest
     {
-        public JobRepositoryTest()
-        {
-            Dapper.SqlMapper.AddTypeMap(typeof(System.DateTime), System.Data.DbType.DateTime2);
-            Dapper.SqlMapper.AddTypeMap(typeof(System.DateTime?), System.Data.DbType.DateTime2);
-        }
         private async Task All(Func<IJobRepository,Task> action)
         {
             using (var testdb = new TestDb())

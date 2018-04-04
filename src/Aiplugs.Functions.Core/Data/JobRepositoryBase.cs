@@ -38,8 +38,22 @@ namespace Aiplugs.Functions.Core.Data
                                 StartAt = @StartAt,
                                 FinishAt = @FinishAt,
                                 Log = @Log
-                          WHERE Id = @Id", job, transaction:tran);
+                          WHERE Id = @Id", ToParameters(job), transaction:tran);
             });
+        }
+        protected DynamicParameters ToParameters(IJob job)
+        {
+            var p = new DynamicParameters();
+            p.Add("Id", job.Id);
+            p.Add("Name", job.Name);
+            p.Add("Progress", job.Progress);
+            p.Add("Status", job.Status);
+            p.Add("Log", job.Log);
+            p.Add("StartAt", job.StartAt, DbType.DateTime2);
+            p.Add("FinishAt", job.FinishAt, DbType.DateTime2);
+            p.Add("CreatedAt", job.CreatedAt, DbType.DateTime2);
+            p.Add("CreatedBy", job.CreatedBy);
+            return p;
         }
     }
 }

@@ -19,7 +19,7 @@ namespace Aiplugs.Functions.Core.Data.SqlServer
                         @"INSERT INTO 
                             Jobs (Name, Status, Progress, StartAt, FinishAt, Log, CreatedAt, CreatedBy) 
                             OUTPUT INSERTED.Id
-                            VALUES (@Name, @Status, @Progress, @StartAt, @FinishAt, @Log, @CreatedAt, @CreatedBy)",job, transaction:tran);
+                            VALUES (@Name, @Status, @Progress, @StartAt, @FinishAt, @Log, @CreatedAt, @CreatedBy)",ToParameters(job), transaction:tran);
             });
         }
 

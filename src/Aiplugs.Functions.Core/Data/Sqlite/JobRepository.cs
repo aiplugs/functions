@@ -21,7 +21,7 @@ namespace Aiplugs.Functions.Core.Data.Sqlite
                         @"INSERT INTO 
                             Jobs (Name, Status, Progress, StartAt, FinishAt, Log, CreatedAt, CreatedBy) 
                             VALUES (@Name, @Status, @Progress, @StartAt, @FinishAt, @Log, @CreatedAt, @CreatedBy); 
-                          SELECT last_insert_rowid();",job, transaction:tran);
+                          SELECT last_insert_rowid();",ToParameters(job), transaction:tran);
             });
         }
 
