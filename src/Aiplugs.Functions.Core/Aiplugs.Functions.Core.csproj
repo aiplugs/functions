@@ -15,8 +15,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../Aiplugs.Functions/Aiplugs.Functions.csproj" />
-    <!-- <PackageReference Include="Aiplugs.Functions" Version="0.9.1-alpha1" /> -->
+    <!-- <ProjectReference Include="../Aiplugs.Functions/Aiplugs.Functions.csproj" /> -->
+    <PackageReference Include="Aiplugs.Functions" Version="0.10.0-alpha1" />
     <PackageReference Include="Dapper" Version="1.50.4" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="2.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.0.0" />
