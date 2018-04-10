@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -29,7 +30,7 @@ namespace Aiplugs.Functions.Core
         [HttpGet]
         public async Task<IActionResult> Get([FromQuery]string filter, [FromQuery]bool desc = true, [FromQuery]long? skipToken = null, [FromQuery]int limit = 10)
         {
-            return Ok(await _jobService.GetAsync(filter, desc, skipToken, limit));
+            return Ok((await _jobService.GetAsync(filter, desc, skipToken, limit)).Select(job => new JobViewModel(job)));
         }
         
         [HttpPost]
@@ -38,7 +39,7 @@ namespace Aiplugs.Functions.Core
             if (ModelState.IsValid == false)
                 return BadRequest(model);
             
-            var id = await _jobService.ExclusiveCreateAsync(model.Name);
+            var id = await _jobService.ExclusiveCreateAsync(model.Name, model.Parameters);
 
             if (id.HasValue == false)
                 return StatusCode((int)HttpStatusCode.Conflict);

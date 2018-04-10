@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace Aiplugs.Functions.Core
 {
@@ -16,6 +17,7 @@ namespace Aiplugs.Functions.Core
         public DateTime CreatedAt { get; set; }
         public string CreatedBy { get; set; }
         public string Log {get;set;}
+        public string Parameters { get; set; }
 
         public Job() 
         {
@@ -27,11 +29,19 @@ namespace Aiplugs.Functions.Core
             CreatedBy = Guid.Empty.ToString();
         }
         public Job(string name, string createBy) 
+            : this(name, createBy, null)
+        {}
+        public Job(string name, string createBy, object @params) 
             : this()
         {
             Name = name;
             CreatedAt = DateTime.UtcNow;            
             CreatedBy = createBy;
+            Parameters = JsonConvert.SerializeObject(@params);
+        }
+        public TParams GetParameters<TParams>()
+        {
+            return JsonConvert.DeserializeObject<TParams>(Parameters);
         }
     }
 }

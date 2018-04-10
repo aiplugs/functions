@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using Newtonsoft.Json.Linq;
 
 namespace Aiplugs.Functions.Core
 {
@@ -6,5 +7,6 @@ namespace Aiplugs.Functions.Core
     {
         [Required]
         public string Name { get; set; }
+        public JObject Parameters { get; set; }
     }
 }

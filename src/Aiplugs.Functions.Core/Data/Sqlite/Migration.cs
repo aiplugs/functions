@@ -29,13 +29,14 @@ namespace Aiplugs.Functions.Core.Data.Sqlite
                             Jobs (
                                 Id     INTEGER PRIMARY KEY,
                                 Name   VARCHAR(255) NOT NULL,
-                                Progress  INTEGER NOT NULL,
-                                Status    INTEGER NOT NULL,
-                                StartAt   DATETIME NULL,
-                                FinishAt  DATETIME NULL,
-                                Log       TEXT NULL,
-                                CreatedAt DATETIME NOT NULL,
-                                CreatedBy VARCHAR(64) NOT NULL
+                                Parameters TEXT NULL,
+                                Progress   INTEGER NOT NULL,
+                                Status     INTEGER NOT NULL,
+                                StartAt    DATETIME NULL,
+                                FinishAt   DATETIME NULL,
+                                Log        TEXT NULL,
+                                CreatedAt  DATETIME NOT NULL,
+                                CreatedBy  VARCHAR(64) NOT NULL
                             )", tran);
             }
 

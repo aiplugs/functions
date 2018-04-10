@@ -63,7 +63,7 @@ namespace Aiplugs.Functions.Core
             return await _jobRegistory.DequeueAsync();
         }
 
-        public async Task<long?> ExclusiveCreateAsync(string name)
+        public async Task<long?> ExclusiveCreateAsync<TParams>(string name, TParams @params)
         {
             var userId = _userResolver.GetUserId();
             if (string.IsNullOrEmpty(userId))
@@ -72,7 +72,7 @@ namespace Aiplugs.Functions.Core
             if (await _lockService.LockAsync(name) == false)
                 return null;
             
-            var job = new Job(name, userId);
+            var job = new Job(name, userId, @params);
 
             job.Id = await _jobRepository.AddAsync(job);
 

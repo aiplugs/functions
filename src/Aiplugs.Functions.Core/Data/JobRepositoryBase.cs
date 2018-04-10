@@ -33,6 +33,7 @@ namespace Aiplugs.Functions.Core.Data
                 return await _db.ExecuteAsync(
                         @"UPDATE Jobs
                             SET Name = @Name,
+                                Parameters = @Parameters,
                                 Progress = @Progress,
                                 Status = @Status,
                                 StartAt = @StartAt,
@@ -46,6 +47,7 @@ namespace Aiplugs.Functions.Core.Data
             var p = new DynamicParameters();
             p.Add("Id", job.Id);
             p.Add("Name", job.Name);
+            p.Add("Parameters", job.Parameters);
             p.Add("Progress", job.Progress);
             p.Add("Status", job.Status);
             p.Add("Log", job.Log);

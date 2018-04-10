@@ -7,7 +7,7 @@ namespace Aiplugs.Functions.Core
 {
     public static class ServiceCollectionsExtensions
     {
-        public static IServiceCollection AddAiplugsFunctions(this IServiceCollection services, Func<OptionsBuilder, OptionsBuilder> options)
+        public static IServiceCollection AddAiplugsFunctions<TParams>(this IServiceCollection services, Func<OptionsBuilder, OptionsBuilder> options)
         {
             var opts = options(new OptionsBuilder());
             services.AddTransient<IMigration>(provider => opts.MigrationFactory(provider.GetRequiredService<IDbConnection>()));

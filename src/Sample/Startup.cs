@@ -14,6 +14,7 @@ using Sample.Services;
 using Aiplugs.Functions.Core;
 using System.Data;
 using Microsoft.Data.Sqlite;
+using Newtonsoft.Json.Linq;
 
 namespace Sample
 {
@@ -38,12 +39,12 @@ namespace Sample
             services.AddSingleton(SampleDb.Instance);
 
             // Add application services.
-            services.AddTransient<IContextFactory, SampleContextFactory>();
+            services.AddTransient<IContextFactory<JObject>, SampleContextFactory>();
             services.AddTransient<ILockService, SampleLockService>();
             services.AddTransient<IUserResolver, SampleUserResolver>();
             services.AddTransient<IProcedureResolver, SampleProcedureResolver>();
 
-            services.AddAiplugsFunctions(options => options.UseSqlite().ForceMigration());
+            services.AddAiplugsFunctions<JObject>(options => options.UseSqlite().ForceMigration());
             
             services.AddMvc();
 
@@ -73,7 +74,7 @@ namespace Sample
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
 
-            app.UseAiplugsFunctions();
+            app.UseAiplugsFunctions<JObject>();
 
             lifetime.ApplicationStopped.Register(() => SampleDb.CloseAndDispose());
         }

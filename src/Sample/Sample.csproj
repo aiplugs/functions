@@ -6,8 +6,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Aiplugs.Functions" Version="0.9.1-alpha1" />
-    <PackageReference Include="Aiplugs.Functions.Core" Version="0.9.1-alpha2" />
+    <ProjectReference Include="../Aiplugs.Functions/Aiplugs.Functions.csproj" />
+    <ProjectReference Include="../Aiplugs.Functions.Core/Aiplugs.Functions.Core.csproj" />
+    <!-- <PackageReference Include="Aiplugs.Functions" Version="0.9.1-alpha1" />
+    <PackageReference Include="Aiplugs.Functions.Core" Version="0.9.1-alpha2" /> -->
   </ItemGroup>
 
   <ItemGroup>

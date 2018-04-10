@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Aiplugs.Functions.Core;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json.Linq;
 using Sample.Models;
 
 namespace Sample.Controllers
@@ -37,7 +38,7 @@ namespace Sample.Controllers
             if (ModelState.IsValid == false)
                 return RedirectToAction("Index");
 
-            var id = await _jobService.ExclusiveCreateAsync(model.Name);
+            var id = await _jobService.ExclusiveCreateAsync(model.Name, new JObject());
             if (id.HasValue == false)
                 return StatusCode((int)HttpStatusCode.Conflict);
 

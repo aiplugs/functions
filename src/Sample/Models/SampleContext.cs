@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using Aiplugs.Functions;
+using Newtonsoft.Json.Linq;
 
 namespace Sample.Models
 {
@@ -14,8 +15,12 @@ namespace Sample.Models
         public CancellationToken CancellationToken { get; private set; }
 
         public IProgress<int> Progress { get; private set; }
-        public SampleContext(ILogger logger, CancellationToken cancellationToken, Action<int> onProgress)
+
+        public JObject Parameters { get; private set; }
+
+        public SampleContext(JObject @params, ILogger logger, CancellationToken cancellationToken, Action<int> onProgress)
         {
+            Parameters = @params;
             Logger = logger;
             CancellationToken = cancellationToken;
             Progress = new Progress<int>(onProgress);

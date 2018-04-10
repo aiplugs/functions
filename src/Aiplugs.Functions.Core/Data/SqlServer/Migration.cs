@@ -29,13 +29,14 @@ namespace Aiplugs.Functions.Core.Data.SqlServer
                             Jobs (
                                 Id     BIGINT IDENTITY,
                                 Name   NVARCHAR(255) NOT NULL,
-                                Progress  INT NOT NULL,
-                                Status    INT NOT NULL,
-                                StartAt   DATETIME2 NULL,
-                                FinishAt  DATETIME2 NULL,
-                                Log       NVARCHAR(MAX) NULL,
-                                CreatedAt DATETIME2 NOT NULL,
-                                CreatedBy NVARCHAR(64) NOT NULL
+                                Parameters NVARCHAR(MAX) NULL,
+                                Progress   INT NOT NULL,
+                                Status     INT NOT NULL,
+                                StartAt    DATETIME2 NULL,
+                                FinishAt   DATETIME2 NULL,
+                                Log        NVARCHAR(MAX) NULL,
+                                CreatedAt  DATETIME2 NOT NULL,
+                                CreatedBy  NVARCHAR(64) NOT NULL
                             )", transaction:tran);
             }
 

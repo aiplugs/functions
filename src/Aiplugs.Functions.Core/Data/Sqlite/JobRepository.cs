@@ -19,8 +19,8 @@ namespace Aiplugs.Functions.Core.Data.Sqlite
             return await _db.TransactionalAsync(async tran => {
                 return await _db.ExecuteScalarAsync<long>(
                         @"INSERT INTO 
-                            Jobs (Name, Status, Progress, StartAt, FinishAt, Log, CreatedAt, CreatedBy) 
-                            VALUES (@Name, @Status, @Progress, @StartAt, @FinishAt, @Log, @CreatedAt, @CreatedBy); 
+                            Jobs (Name, Parameters, Status, Progress, StartAt, FinishAt, Log, CreatedAt, CreatedBy) 
+                            VALUES (@Name, @Parameters, @Status, @Progress, @StartAt, @FinishAt, @Log, @CreatedAt, @CreatedBy); 
                           SELECT last_insert_rowid();",ToParameters(job), transaction:tran);
             });
         }
@@ -34,7 +34,7 @@ namespace Aiplugs.Functions.Core.Data.Sqlite
                 filter.Add($"Id {(desc ? "<" : ">")} @SkipToken");
 
             var sb = new StringBuilder();
-            sb.AppendLine("SELECT Id, Name, Status, Progress, StartAt, FinishAt, Log, CreatedAt, CreatedBy");
+            sb.AppendLine("SELECT Id, Name, Parameters, Status, Progress, StartAt, FinishAt, Log, CreatedAt, CreatedBy");
             sb.AppendLine("FROM Jobs");
             if (filter.Count > 0)
                 sb.AppendLine($"WHERE {string.Join(" AND ", filter)}");

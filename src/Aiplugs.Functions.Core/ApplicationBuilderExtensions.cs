@@ -8,21 +8,21 @@ namespace Aiplugs.Functions.Core
 {
     public static class ApplicationBuilderExtensions
     {
-        public static IApplicationBuilder UseAiplugsFunctions(this IApplicationBuilder app)
+        public static IApplicationBuilder UseAiplugsFunctions<TParams>(this IApplicationBuilder app)
         {
             var services = app.ApplicationServices;
             var lifetime = services.GetRequiredService<IApplicationLifetime>();
             var migration = services.GetRequiredService<IMigration>();
             var jobService = services.GetRequiredService<IJobService>();
             var procedureResolver = services.GetRequiredService<IProcedureResolver>();
-            var contextFactory = services.GetRequiredService<IContextFactory>();
+            var contextFactory = services.GetRequiredService<IContextFactory<TParams>>();
             var loggerFactory = services.GetRequiredService<ILoggerFactory>();
             var logger = loggerFactory.CreateLogger("Aiplugs.Functions");
 
             if (migration.NeedMigrate())
                 migration.Migrate();
 
-            var runner = new JobRunner(jobService, procedureResolver, contextFactory, logger);
+            var runner = new JobRunner<TParams>(jobService, procedureResolver, contextFactory, logger);
 
             lifetime.ApplicationStopping.Register(() => runner.NotifyStop());
             lifetime.ApplicationStopped.Register(() => runner.Dispose());

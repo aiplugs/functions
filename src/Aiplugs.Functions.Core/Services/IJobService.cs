@@ -6,7 +6,7 @@ namespace Aiplugs.Functions.Core
 {
     public interface IJobService
     {
-        Task<long?> ExclusiveCreateAsync(string name);
+        Task<long?> ExclusiveCreateAsync<TParams>(string name, TParams @params);
         Task<IEnumerable<IJob>> GetAsync(string name, bool desc = true, long? skipToken = null, int limit = 10);
         Task<IJob> FindAsync(long id);
         void Cancel(long id);

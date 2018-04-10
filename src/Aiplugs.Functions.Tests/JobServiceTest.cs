@@ -9,6 +9,7 @@ namespace Aiplugs.Functions.Tests
 {
     public class JobServiceTest
     {
+        public class TestParams {}
         private IJobRepository CreateJobRepository()
         {
             long count = 0;
@@ -53,7 +54,7 @@ namespace Aiplugs.Functions.Tests
         public async Task ExclusiveCreateAsync_should_return_value_when_lock_is_success()
         {
             var svc = new JobService(CreateJobRepository(), new JobRegistory(), CreateLockService(true), CreateUserResolver());
-            var id = await svc.ExclusiveCreateAsync("Test");
+            var id = await svc.ExclusiveCreateAsync("Test", new TestParams());
             Assert.True(id.HasValue);
         }
 
@@ -61,7 +62,7 @@ namespace Aiplugs.Functions.Tests
         public async Task ExclusiveCreateAsync_should_return_value_when_lock_is_faild()
         {
             var svc = new JobService(CreateJobRepository(), new JobRegistory(), CreateLockService(false), CreateUserResolver());
-            var id = await svc.ExclusiveCreateAsync("Test");
+            var id = await svc.ExclusiveCreateAsync("Test", new TestParams());
             Assert.False(id.HasValue);
         }
 
@@ -69,7 +70,7 @@ namespace Aiplugs.Functions.Tests
         public async Task ExclusiveCreateAsync_should_create_job_by_the_user()
         {
             var svc = new JobService(CreateJobRepository(), new JobRegistory(), CreateLockService(true), CreateUserResolver());
-            var id = await svc.ExclusiveCreateAsync("Test");
+            var id = await svc.ExclusiveCreateAsync("Test", new TestParams());
 
             Assert.True(id.HasValue);
 
@@ -82,7 +83,7 @@ namespace Aiplugs.Functions.Tests
         public async Task DequeueAsync_should_return_instance_after_ExclusiveCreateAsync()
         {
             var svc = new JobService(CreateJobRepository(), new JobRegistory(), CreateLockService(true), CreateUserResolver());
-            var id = await svc.ExclusiveCreateAsync("Test");
+            var id = await svc.ExclusiveCreateAsync("Test", new TestParams());
             var job = await svc.DequeueAsync();
 
             Assert.NotNull(job);
@@ -94,7 +95,7 @@ namespace Aiplugs.Functions.Tests
         {
             var registory = new JobRegistory();
             var svc = new JobService(CreateJobRepository(), registory, CreateLockService(true), CreateUserResolver());
-            var id = await svc.ExclusiveCreateAsync("Test");
+            var id = await svc.ExclusiveCreateAsync("Test", new TestParams());
 
             svc.RegisterCanceller(id.Value, () => { });
             Assert.True(registory.ExistCanceller(id.Value));
@@ -105,7 +106,7 @@ namespace Aiplugs.Functions.Tests
         {
             var registory = new JobRegistory();
             var svc = new JobService(CreateJobRepository(), registory, CreateLockService(true), CreateUserResolver());
-            var id = await svc.ExclusiveCreateAsync("Test");
+            var id = await svc.ExclusiveCreateAsync("Test", new TestParams());
 
             svc.RegisterCanceller(id.Value, () => { });
             Assert.True(registory.ExistCanceller(id.Value));
@@ -119,7 +120,7 @@ namespace Aiplugs.Functions.Tests
         {
             var registory = new JobRegistory();
             var svc = new JobService(CreateJobRepository(), registory, CreateLockService(true), CreateUserResolver());
-            var id = await svc.ExclusiveCreateAsync("Test");
+            var id = await svc.ExclusiveCreateAsync("Test", new TestParams());
 
             var canceled = false;
             svc.RegisterCanceller(id.Value, () => { canceled = true; });
@@ -135,8 +136,8 @@ namespace Aiplugs.Functions.Tests
         public async Task CancelAll_should_call_registered_cancellers()
         {
             var svc = new JobService(CreateJobRepository(), new JobRegistory(), CreateLockService(true), CreateUserResolver());
-            var id1 = await svc.ExclusiveCreateAsync("Test");
-            var id2 = await svc.ExclusiveCreateAsync("Test");
+            var id1 = await svc.ExclusiveCreateAsync("Test", new TestParams());
+            var id2 = await svc.ExclusiveCreateAsync("Test", new TestParams());
 
             var canceled1 = false;
             var canceled2 = false;
@@ -157,7 +158,7 @@ namespace Aiplugs.Functions.Tests
                 unlocked = true;
             });
             var svc = new JobService(CreateJobRepository(), registory, lockService, CreateUserResolver());
-            var id = await svc.ExclusiveCreateAsync("Test");
+            var id = await svc.ExclusiveCreateAsync("Test", new TestParams());
             var job = await svc.FindAsync(id.Value);
 
             job.FinishAt = DateTime.UtcNow;

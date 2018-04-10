@@ -3,8 +3,8 @@ using System.Threading;
 
 namespace Aiplugs.Functions.Core
 {
-    public interface IContextFactory
+    public interface IContextFactory<TParams>
     {
-        IContext Create(ILogger logger, CancellationToken token, Action<int> onProgress);
+        IContext<TParams> Create(TParams @params, ILogger logger, CancellationToken token, Action<int> onProgress);
     }
 }

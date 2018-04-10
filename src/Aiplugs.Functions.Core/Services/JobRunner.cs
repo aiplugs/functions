@@ -7,16 +7,16 @@ using MSLogger = Microsoft.Extensions.Logging.ILogger;
 
 namespace Aiplugs.Functions.Core
 {
-    public class JobRunner : IDisposable
+    public class JobRunner<TParams> : IDisposable
     {
-        private readonly IContextFactory _contextFactory;
+        private readonly IContextFactory<TParams> _contextFactory;
         private readonly IProcedureResolver _procedureResolver;
         private readonly IJobService _jobService;
         private readonly MSLogger _logger;
         private const string ERR_EXCEPTION_THROWN = "ExceptionThrown";
         CancellationTokenSource CancellationTokenSource;
 
-        public JobRunner(IJobService jobService, IProcedureResolver procedureResolver, IContextFactory contextFactory, MSLogger logger)
+        public JobRunner(IJobService jobService, IProcedureResolver procedureResolver, IContextFactory<TParams> contextFactory, MSLogger logger)
         {
             if (jobService == null)
                 throw new ArgumentNullException(nameof(jobService));
@@ -68,7 +68,7 @@ namespace Aiplugs.Functions.Core
         {
             var log = new Logger(_logger, job);
             var cts = new CancellationTokenSource();
-            var context = _contextFactory.Create(log, cts.Token, p => job.Progress = p);
+            var context = _contextFactory.Create(job.GetParameters<TParams>(), log, cts.Token, p => job.Progress = p);
 
             _jobService.RegisterCanceller(job.Id, () => cts.Cancel(true));
             

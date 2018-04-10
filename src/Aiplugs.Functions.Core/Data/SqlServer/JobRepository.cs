@@ -17,9 +17,9 @@ namespace Aiplugs.Functions.Core.Data.SqlServer
             return await _db.TransactionalAsync(async tran => {
                 return await _db.ExecuteScalarAsync<long>(
                         @"INSERT INTO 
-                            Jobs (Name, Status, Progress, StartAt, FinishAt, Log, CreatedAt, CreatedBy) 
+                            Jobs (Name, Parameters, Status, Progress, StartAt, FinishAt, Log, CreatedAt, CreatedBy) 
                             OUTPUT INSERTED.Id
-                            VALUES (@Name, @Status, @Progress, @StartAt, @FinishAt, @Log, @CreatedAt, @CreatedBy)",ToParameters(job), transaction:tran);
+                            VALUES (@Name, @Parameters, @Status, @Progress, @StartAt, @FinishAt, @Log, @CreatedAt, @CreatedBy)",ToParameters(job), transaction:tran);
             });
         }
 
@@ -32,7 +32,7 @@ namespace Aiplugs.Functions.Core.Data.SqlServer
                 filter.Add($"Id {(desc ? "<" : ">")} @SkipToken");
 
             var sb = new StringBuilder();
-            sb.AppendLine("SELECT TOP (@Limit) Id, Name, Status, Progress, StartAt, FinishAt, Log, CreatedAt, CreatedBy");
+            sb.AppendLine("SELECT TOP (@Limit) Id, Name, Parameters, Status, Progress, StartAt, FinishAt, Log, CreatedAt, CreatedBy");
             sb.AppendLine("FROM Jobs");
             if (filter.Count > 0)
                 sb.AppendLine($"WHERE {string.Join(" AND ", filter)}");

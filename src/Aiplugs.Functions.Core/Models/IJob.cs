@@ -13,5 +13,6 @@ namespace Aiplugs.Functions.Core
         DateTime? FinishAt { get; set; }
         DateTime CreatedAt { get; set; }
         string CreatedBy { get; set; }
+        string Parameters { get; set; }
     }
 }
