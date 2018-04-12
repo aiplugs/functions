@@ -5,6 +5,6 @@ namespace Aiplugs.Functions.Core
 {
     public interface IContextFactory<TParams>
     {
-        IContext<TParams> Create(TParams @params, ILogger logger, CancellationToken token, Action<int> onProgress);
+        IContext<TParams> Create(IJobInfo job, ILogger logger, CancellationToken token, Action<int> onProgress);
     }
 }

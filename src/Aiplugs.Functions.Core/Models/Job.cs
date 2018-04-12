@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 
 namespace Aiplugs.Functions.Core
 {
-    public class Job : IJob
+    public class Job : IJob, IJobInfo
     {
         public long Id { get; set; }
         public string Name { get; set; }

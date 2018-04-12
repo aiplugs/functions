@@ -68,7 +68,7 @@ namespace Aiplugs.Functions.Core
         {
             var log = new Logger(_logger, job);
             var cts = new CancellationTokenSource();
-            var context = _contextFactory.Create(job.GetParameters<TParams>(), log, cts.Token, p => job.Progress = p);
+            var context = _contextFactory.Create(job, log, cts.Token, p => job.Progress = p);
 
             _jobService.RegisterCanceller(job.Id, () => cts.Cancel(true));
             
