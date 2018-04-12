@@ -2,7 +2,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: microsoft/dotnet:2.0.5-sdk-2.1.4-stretch
+      - image: microsoft/dotnet:2.1-sdk-stretch
     working_directory: ~/repo
     steps:
       - checkout
@@ -18,7 +18,7 @@ jobs:
           key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
   push_preview:
     docker:
-      - image: microsoft/dotnet:2.0.5-sdk-2.1.4-stretch
+      - image: microsoft/dotnet:2.1-sdk-stretch
     working_directory: ~/repo
     steps:
       - restore_cache:
@@ -31,7 +31,7 @@ jobs:
             dotnet nuget push ./bin/Release/*.nupkg -s https://api.nuget.org/v3/index.json -k $NUGET_TOKEN
   push_core_preview:
     docker:
-      - image: microsoft/dotnet:2.0.5-sdk-2.1.4-stretch
+      - image: microsoft/dotnet:2.1-sdk-stretch
     working_directory: ~/repo
     steps:
       - restore_cache:
@@ -44,7 +44,7 @@ jobs:
             dotnet nuget push ./bin/Release/*.nupkg -s https://api.nuget.org/v3/index.json -k $NUGET_TOKEN
   push:
     docker:
-      - image: microsoft/dotnet:2.0.5-sdk-2.1.4-stretch
+      - image: microsoft/dotnet:2.1-sdk-stretch
     working_directory: ~/repo
     steps:
       - restore_cache:
@@ -56,7 +56,7 @@ jobs:
             dotnet nuget push ./bin/Release/*.nupkg -s https://api.nuget.org/v3/index.json -k $NUGET_TOKEN
   push_core:
     docker:
-      - image: microsoft/dotnet:2.0.5-sdk-2.1.4-stretch
+      - image: microsoft/dotnet:2.1-sdk-stretch
     working_directory: ~/repo
     steps:
       - restore_cache:
