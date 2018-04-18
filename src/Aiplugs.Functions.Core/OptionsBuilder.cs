@@ -20,8 +20,6 @@ namespace Aiplugs.Functions.Core
         }
         public OptionsBuilder UseSqlServer()
         {
-            Dapper.SqlMapper.AddTypeMap(typeof(System.DateTime), System.Data.DbType.DateTime2);
-            Dapper.SqlMapper.AddTypeMap(typeof(System.DateTime?), System.Data.DbType.DateTime2);
             MigrationFactory = db => new Data.SqlServer.Migration(db, _forceMigration);
             JobRepositoryFactory = db => new Data.SqlServer.JobRepository(db);            
             return this;
