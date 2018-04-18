@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Version>0.10.1$(VersionSuffix)</Version>
-    <PackageVersion>0.10.1$(VersionSuffix)</PackageVersion>
+    <Version>0.10.2$(VersionSuffix)</Version>
+    <PackageVersion>0.10.2$(VersionSuffix)</PackageVersion>
     <PackageId>Aiplugs.Functions.Core</PackageId>
     <Authors>aiplugs</Authors>
     <Copyright>aiplugs</Copyright>
