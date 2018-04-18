@@ -44,7 +44,7 @@ namespace Sample
             services.AddTransient<IUserResolver, SampleUserResolver>();
             services.AddTransient<IProcedureResolver, SampleProcedureResolver>();
 
-            services.AddAiplugsFunctions<JObject>(options => options.UseSqlite().ForceMigration());
+            services.AddAiplugsFunctions(options => options.UseSqlite().ForceMigration());
             
             services.AddMvc();
 
