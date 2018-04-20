@@ -78,8 +78,9 @@ namespace Aiplugs.Functions.Core
                     job.Status = JobStatus.Running;
                     try
                     {
-                        var method = _procedureResolver.Resolve(job.Name).CreateMethod();
-                        method.Invoke(null, new []{ context });
+                        var procedure = _procedureResolver.Resolve(job.Name);
+                        var method = procedure.CreateMethod();
+                        method.Invoke(procedure, new []{ context });
                     }
                     catch(Exception ex)
                     {
